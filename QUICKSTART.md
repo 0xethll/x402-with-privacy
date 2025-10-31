@@ -16,7 +16,7 @@ x402-with-privacy/
 ├── apps/
 │   ├── hono-server/                # 🚀 Hono server
 │   │   ├── src/middleware.ts       #    - confidentialPaymentMiddleware
-│   │   └── src/index.ts            #    - /weather example endpoint
+│   │   └── src/index.ts            #    - /credit-score, /medical-records endpoints
 │   │
 │   ├── client/                     # 💻 Client
 │   │   └── src/index.ts            #    - Complete payment process demonstration

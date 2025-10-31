@@ -112,7 +112,13 @@ pnpm dev:server
 Expected output:
 ```
 🚀 Confidential X402 server running on http://localhost:4021
-📊 Protected endpoint: /weather
+
+🔒 Protected Endpoints (Privacy-Preserving Payments):
+   GET /credit-score      - 0.5 ConfidentialUSD
+   GET /medical-records   - 1.0 ConfidentialUSD
+
+💡 Privacy benefit: Payment amounts are encrypted using FHE
+   Third parties cannot see how much you paid for sensitive data
 ```
 
 ### Terminal 3: Run Client
@@ -123,38 +129,48 @@ pnpm dev:client
 
 Expected output:
 ```
-🌤️  Fetching weather data with confidential payment...
+🔒 Fetching confidential credit score with privacy-preserving payment...
 
 👛 Wallet address: 0x...
 
-📡 Step 1: Making initial request...
-💳 Step 2: Payment required. Creating confidential payment...
+📡 Step 1: Making initial request to /credit-score...
+💳 Step 2: Payment required for sensitive data access
 
 📋 Payment Requirements:
+   Resource: Access to confidential credit score report
    Scheme: exact-confidential
    Network: sepolia
-   Amount: 1000
+   Amount: 500000 (0.50 ConfidentialUSD)
    Pay To: 0x...
 
 🔐 Step 3: Creating FHE encrypted payment...
-✅ Payment header created (encrypted)
+   🔒 Encrypting payment amount with FHE
+   🔏 Payment amount is hidden from third parties
+✅ Payment header created (amount encrypted)
 
-📡 Step 4: Retrying request with payment...
+📡 Step 4: Retrying request with confidential payment...
 
-✅ Payment successful!
+✅ Payment successful! Access granted to sensitive data
 
-🌤️  Weather Data:
+🔒 Credit Score Report (Confidential):
 {
-  "report": {
-    "weather": "sunny",
-    "temperature": 70,
-    "humidity": 65,
-    "windSpeed": 10
+  "userId": "anonymous",
+  "creditScore": 750,
+  "rating": "Good",
+  "factors": {
+    "paymentHistory": "Excellent",
+    "creditUtilization": "28%",
+    ...
   },
-  "timestamp": "2025-10-31T..."
+  "disclaimer": "This is confidential financial information. Payment was made privately using FHE encryption."
 }
 
 ✨ Done!
+
+💡 Privacy Note:
+   Your payment amount was encrypted using FHE (Fully Homomorphic Encryption)
+   No one can see how much you paid to access your credit score
+   This protects your financial privacy!
 ```
 
 ## Step 5: Verify On-Chain

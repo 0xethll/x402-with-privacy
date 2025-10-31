@@ -1,14 +1,27 @@
 # X402 with Privacy
 
-Privacy-preserving payment protocol built on X402 and Zama's fhEVM (Fully Homomorphic Encryption).
+Privacy-preserving payment protocol for sensitive data APIs, built on X402 and Zama's fhEVM (Fully Homomorphic Encryption).
+
+## 💡 Why Privacy-Preserving Payments?
+
+When accessing sensitive information like **credit scores**, **medical records**, or **financial data**, traditional payments reveal:
+- 🔍 How much you paid (reveals the value of information)
+- 🔍 When you accessed it (reveals your behavior patterns)
+- 🔍 What you're interested in (reveals your concerns)
+
+**With FHE encryption**, payment amounts are **completely hidden**:
+- ✅ No one can see how much you paid to check your credit score
+- ✅ No one knows which medical records you accessed
+- ✅ Your financial privacy is protected on-chain
 
 ## 🎯 Features
 
-- ✅ **Complete Privacy**: Payment amounts and balances are encrypted using FHE
+- ✅ **Complete Privacy**: Payment amounts encrypted using FHE (Fully Homomorphic Encryption)
 - ✅ **X402 Compatible**: Implements the X402 protocol specification
 - ✅ **No Gas for Users**: Facilitator pays transaction gas fees
 - ✅ **EIP-712 Signatures**: User-friendly structured data signing
 - ✅ **Monorepo Structure**: Clean separation of concerns
+- ✅ **Privacy-First Examples**: Credit score and medical records APIs
 
 ## 📦 Project Structure
 
