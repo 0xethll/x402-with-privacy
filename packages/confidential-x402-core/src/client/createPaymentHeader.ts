@@ -2,7 +2,6 @@
  * Client-side payment header creation for confidential X402
  */
 
-import { initFHEVM, createFHEVMClient } from "@fhevmsdk/core";
 import { type WalletClient, type Address, type Hex, bytesToHex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type {
@@ -13,6 +12,7 @@ import type {
 } from "@x402-privacy/types";
 import { encodePaymentPayload } from "../utils/encoding";
 import { getChainId, getFhevmNetwork } from "../utils/network";
+import { getFHEVMClient } from "../utils/fhevm";
 
 /**
  * Create encrypted payment header for confidential X402 protocol
@@ -33,14 +33,8 @@ export async function createPaymentHeader(
     throw new Error("Wallet client must have an account");
   }
 
-  // Initialize FHEVM SDK
-  await initFHEVM();
-
-  // Create FHEVM client with RPC provider
-  const client = await createFHEVMClient({
-    network: fhevmConfig.network,
-    provider: fhevmConfig.rpcUrl,
-  });
+  // Get or create cached FHEVM client
+  const client = await getFHEVMClient(fhevmConfig);
 
   // Encrypt amount
   const plaintextAmount = BigInt(paymentRequirements.maxAmountRequired);

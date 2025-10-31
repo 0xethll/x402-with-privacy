@@ -12,8 +12,11 @@ import type { Address, Hex } from "viem";
 import {
   verifyConfidentialPayment,
   settleConfidentialPayment,
+  ensureFHEVMInitialized,
+  getFHEVMClient,
   type PaymentPayload,
   type PaymentRequirements,
+  type FhevmConfig,
 } from "@x402-privacy/core";
 
 config();
@@ -35,12 +38,25 @@ const walletClient = createWalletClient({
   transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
 });
 
-const fhevmConfig = {
-  network: "sepolia" as const,
+const fhevmConfig: FhevmConfig = {
+  network: "sepolia",
   rpcUrl: process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com",
 };
 
 console.log(`🔑 Facilitator address: ${facilitatorAccount.address}`);
+
+// Pre-initialize FHEVM client at startup
+console.log("\n🚀 Pre-initializing FHEVM client...");
+ensureFHEVMInitialized()
+  .then(() => getFHEVMClient(fhevmConfig))
+  .then(() => {
+    console.log("✅ FHEVM client pre-initialized and ready");
+    console.log("   First payment request will be fast!\n");
+  })
+  .catch((error) => {
+    console.error("⚠️  Failed to pre-initialize FHEVM:", error);
+    console.error("   Payments will still work, but first request will be slower\n");
+  });
 
 /**
  * POST /verify

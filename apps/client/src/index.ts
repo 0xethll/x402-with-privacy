@@ -9,16 +9,23 @@ import axios from "axios";
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type { Hex } from "viem";
-import { createPaymentHeader, type PaymentRequirements } from "@x402-privacy/core";
+import {
+  createPaymentHeader,
+  ensureFHEVMInitialized,
+  type PaymentRequirements
+} from "@x402-privacy/core";
 
 config();
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:4021";
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:9527";
 const PRIVATE_KEY = process.env.PRIVATE_KEY!;
 const RPC_URL = process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
 
 async function fetchCreditScore() {
   console.log("🔒 Fetching confidential credit score with privacy-preserving payment...\n");
+
+  // Pre-initialize FHEVM SDK (only happens once)
+  await ensureFHEVMInitialized();
 
   // Initialize wallet client
   const account = privateKeyToAccount(PRIVATE_KEY as Hex);

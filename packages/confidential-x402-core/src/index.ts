@@ -17,3 +17,4 @@ export { settleConfidentialPayment } from "./facilitator/settle";
 // Utilities
 export { encodePaymentPayload, decodePaymentPayload } from "./utils/encoding";
 export { getChainId, getFhevmNetwork } from "./utils/network";
+export { getFHEVMClient, ensureFHEVMInitialized, clearFHEVMCache, getFHEVMCacheStats } from "./utils/fhevm";

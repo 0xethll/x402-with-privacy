@@ -11,7 +11,6 @@ import {
   getContract,
   parseEventLogs,
 } from "viem";
-import { initFHEVM, createFHEVMClient } from "@fhevmsdk/core";
 import type {
   PaymentPayload,
   PaymentRequirements,
@@ -19,6 +18,7 @@ import type {
   FhevmConfig,
 } from "@x402-privacy/types";
 import { getFhevmNetwork } from "../utils/network";
+import { getFHEVMClient } from "../utils/fhevm";
 
 const CONFIDENTIAL_USD_ABI = [
   {
@@ -136,14 +136,8 @@ export async function settleConfidentialPayment(
         throw new Error("Wallet client must have an account for decryption");
       }
 
-      // Initialize FHEVM SDK
-      await initFHEVM();
-
-      // Create FHEVM client with RPC provider
-      const client = await createFHEVMClient({
-        network: fhevmConfig.network,
-        provider: fhevmConfig.rpcUrl,
-      });
+      // Get or create cached FHEVM client
+      const client = await getFHEVMClient(fhevmConfig);
 
       // Decrypt using wallet client for signing
       const decryptedTransferred = await client.decrypt({
