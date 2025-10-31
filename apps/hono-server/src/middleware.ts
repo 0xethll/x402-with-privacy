@@ -3,16 +3,12 @@
  */
 
 import { Context } from "hono";
-import { createPublicClient, createWalletClient, http } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import type { Hex } from "viem";
 import {
-  verifyConfidentialPayment,
-  settleConfidentialPayment,
   decodePaymentPayload,
   encodePaymentPayload,
   type MiddlewareOptions,
   type PaymentRequirements,
+  type VerifyResponse,
   type SettleResponse,
 } from "@x402-privacy/core";
 
@@ -22,19 +18,11 @@ import {
 export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
   const { payTo, routes, facilitator, contractAddress } = options;
 
-  // Initialize clients
-  const publicClient = createPublicClient({
-    transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
-  });
+  if (!facilitator?.url) {
+    throw new Error("Facilitator URL is required in middleware options");
+  }
 
-  const facilitatorAccount = privateKeyToAccount(
-    process.env.FACILITATOR_PRIVATE_KEY! as Hex
-  );
-
-  const walletClient = createWalletClient({
-    account: facilitatorAccount,
-    transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
-  });
+  const facilitatorUrl = facilitator.url;
 
   return async function middleware(c: Context, next: () => Promise<void>) {
     const method = c.req.method.toUpperCase();
@@ -101,12 +89,35 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
       );
     }
 
-    // Verify payment
-    const verification = await verifyConfidentialPayment(
-      decodedPayment,
-      paymentRequirements,
-      publicClient
-    );
+    // Verify payment via Facilitator service
+    let verification: VerifyResponse;
+    try {
+      const verifyResponse = await fetch(`${facilitatorUrl}/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentPayload: decodedPayment,
+          paymentRequirements,
+        }),
+      });
+
+      if (!verifyResponse.ok) {
+        throw new Error(`Facilitator verify failed: ${verifyResponse.status}`);
+      }
+
+      verification = await verifyResponse.json();
+    } catch (error) {
+      console.error("Failed to verify payment:", error);
+      return c.json(
+        {
+          error: "Failed to verify payment with facilitator",
+          accepts: [paymentRequirements],
+        },
+        402
+      );
+    }
 
     if (!verification.isValid) {
       return c.json(
@@ -132,18 +143,24 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
 
     c.res = undefined;
 
-    // Settle payment
+    // Settle payment via Facilitator service
     try {
-      const settlement = await settleConfidentialPayment(
-        walletClient,
-        publicClient,
-        decodedPayment,
-        paymentRequirements,
-        {
-          network: "sepolia",
-          rpcUrl: process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com",
-        }
-      );
+      const settleResponse = await fetch(`${facilitatorUrl}/settle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentPayload: decodedPayment,
+          paymentRequirements,
+        }),
+      });
+
+      if (!settleResponse.ok) {
+        throw new Error(`Facilitator settle failed: ${settleResponse.status}`);
+      }
+
+      const settlement: SettleResponse = await settleResponse.json();
 
       if (settlement.success) {
         const responseHeader = encodePaymentPayload({
@@ -158,9 +175,10 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
 
         res.headers.set("X-PAYMENT-RESPONSE", responseHeader);
       } else {
-        throw new Error(settlement.errorReason);
+        throw new Error(settlement.errorReason || "Settlement failed");
       }
     } catch (error) {
+      console.error("Failed to settle payment:", error);
       res = c.json(
         {
           error: routeConfig.config?.errorMessages?.settlementFailed ||

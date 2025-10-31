@@ -5,21 +5,11 @@
 import type { Network, FhevmNetwork } from "@x402-privacy/types";
 
 const CHAIN_IDS: Record<Network, number> = {
-  mainnet: 1,
   sepolia: 11155111,
-  base: 8453,
-  "base-sepolia": 84532,
-  polygon: 137,
-  avalanche: 43114,
 };
 
 const FHEVM_NETWORKS: Record<Network, FhevmNetwork> = {
   sepolia: "devnet",
-  mainnet: "mainnet",
-  base: "mainnet",
-  "base-sepolia": "devnet",
-  polygon: "mainnet",
-  avalanche: "mainnet",
 };
 
 /**

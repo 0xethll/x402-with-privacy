@@ -20,7 +20,7 @@ app.use(
     contractAddress: process.env.CONFIDENTIAL_USD_ADDRESS!,
     routes: {
       "/weather": {
-        price: "1000", // 0.001 ConfidentialUSD (6 decimals)
+        price: "100000", // 0.001 ConfidentialUSD (6 decimals)
         network: "sepolia",
         config: {
           description: "Access to weather data",

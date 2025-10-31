@@ -16,8 +16,7 @@
     "@x402-privacy/core": "workspace:*",
     "hono": "^4.6.11",
     "@hono/node-server": "^1.13.7",
-    "dotenv": "^16.4.5",
-    "viem": "^2.21.54"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "typescript": "^5.9.3",

@@ -8,10 +8,7 @@
 export * from "@x402-privacy/types";
 
 // Client exports
-export {
-  createPaymentHeader,
-  createPaymentHeaderWithBalanceCheck,
-} from "./client/createPaymentHeader";
+export { createPaymentHeader } from "./client/createPaymentHeader";
 
 // Facilitator exports
 export { verifyConfidentialPayment } from "./facilitator/verify";
