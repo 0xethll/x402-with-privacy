@@ -36,10 +36,10 @@ export async function createPaymentHeader(
   // Initialize FHEVM SDK
   await initFHEVM();
 
-  // Create FHEVM client
+  // Create FHEVM client with RPC provider
   const client = await createFHEVMClient({
-    network: "sepolia",
-    provider: fhevmConfig.gatewayUrl || 'https://ethereum-sepolia-rpc.publicnode.com',
+    network: fhevmConfig.network,
+    provider: fhevmConfig.rpcUrl,
   });
 
   // Encrypt amount

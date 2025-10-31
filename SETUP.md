@@ -48,9 +48,8 @@ cp .env.example .env
 Edit `.env`:
 ```env
 PORT=3000
-RPC_URL=https://devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 FACILITATOR_PRIVATE_KEY=0x...  # Your facilitator wallet
-FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 ```
 
 ### Hono Server Configuration
@@ -63,12 +62,11 @@ cp .env.example .env
 Edit `.env`:
 ```env
 PORT=4021
-RPC_URL=https://devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 PAY_TO_ADDRESS=0x...  # Where you want to receive payments
 CONFIDENTIAL_USD_ADDRESS=0x...  # Your deployed ConfidentialUSD contract
 FACILITATOR_PRIVATE_KEY=0x...  # Same as facilitator (or different)
 FACILITATOR_URL=http://localhost:3000
-FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 ```
 
 ### Client Configuration
@@ -82,8 +80,7 @@ Edit `.env`:
 ```env
 SERVER_URL=http://localhost:4021
 PRIVATE_KEY=0x...  # Client wallet with ConfidentialUSD balance
-RPC_URL=https://devnet.zama.ai
-FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 ```
 
 ## Step 4: Test the Setup

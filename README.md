@@ -48,7 +48,7 @@ pnpm build
 1. **Facilitator** (`apps/facilitator/.env`):
 ```env
 PORT=3000
-RPC_URL=https://devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 FACILITATOR_PRIVATE_KEY=0x...
 FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 ```
@@ -56,7 +56,7 @@ FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 2. **Hono Server** (`apps/hono-server/.env`):
 ```env
 PORT=4021
-RPC_URL=https://devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 PAY_TO_ADDRESS=0x...
 CONFIDENTIAL_USD_ADDRESS=0x...
 FACILITATOR_PRIVATE_KEY=0x...
@@ -67,7 +67,7 @@ FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 ```env
 SERVER_URL=http://localhost:4021
 PRIVATE_KEY=0x...
-RPC_URL=https://devnet.zama.ai
+RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 FHE_GATEWAY_URL=https://gateway.devnet.zama.ai
 ```
 

@@ -24,7 +24,7 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
 
   // Initialize clients
   const publicClient = createPublicClient({
-    transport: http(process.env.RPC_URL || "https://devnet.zama.ai"),
+    transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
   });
 
   const facilitatorAccount = privateKeyToAccount(
@@ -33,7 +33,7 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
 
   const walletClient = createWalletClient({
     account: facilitatorAccount,
-    transport: http(process.env.RPC_URL || "https://devnet.zama.ai"),
+    transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
   });
 
   return async function middleware(c: Context, next: () => Promise<void>) {
@@ -140,8 +140,8 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
         decodedPayment,
         paymentRequirements,
         {
-          network: "devnet",
-          gatewayUrl: process.env.FHE_GATEWAY_URL || "https://gateway.devnet.zama.ai",
+          network: "sepolia",
+          rpcUrl: process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com",
         }
       );
 

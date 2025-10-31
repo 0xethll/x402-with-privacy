@@ -23,7 +23,7 @@ app.use(express.json());
 
 // Initialize clients
 const publicClient = createPublicClient({
-  transport: http(process.env.RPC_URL || "https://devnet.zama.ai"),
+  transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
 });
 
 const facilitatorAccount = privateKeyToAccount(
@@ -32,12 +32,12 @@ const facilitatorAccount = privateKeyToAccount(
 
 const walletClient = createWalletClient({
   account: facilitatorAccount,
-  transport: http(process.env.RPC_URL || "https://devnet.zama.ai"),
+  transport: http(process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"),
 });
 
 const fhevmConfig = {
-  network: "devnet" as const,
-  gatewayUrl: process.env.FHE_GATEWAY_URL || "https://gateway.devnet.zama.ai",
+  network: "sepolia" as const,
+  rpcUrl: process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com",
 };
 
 console.log(`🔑 Facilitator address: ${facilitatorAccount.address}`);

@@ -15,8 +15,7 @@ config();
 
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:4021";
 const PRIVATE_KEY = process.env.PRIVATE_KEY!;
-const RPC_URL = process.env.RPC_URL || "https://devnet.zama.ai";
-const FHE_GATEWAY_URL = process.env.FHE_GATEWAY_URL || "https://gateway.devnet.zama.ai";
+const RPC_URL = process.env.RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com";
 
 async function fetchWeatherData() {
   console.log("🌤️  Fetching weather data with confidential payment...\n");
@@ -55,8 +54,8 @@ async function fetchWeatherData() {
         walletClient,
         { paymentRequirements },
         {
-          network: "devnet",
-          gatewayUrl: FHE_GATEWAY_URL,
+          network: "sepolia",
+          rpcUrl: RPC_URL,
         }
       );
 

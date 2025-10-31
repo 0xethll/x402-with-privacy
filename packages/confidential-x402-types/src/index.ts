@@ -6,13 +6,8 @@
 
 // ==================== Network Types ====================
 
-export type Network =
-  | "sepolia"
-  | "mainnet"
-  | "base"
-  | "base-sepolia"
-  | "polygon"
-  | "avalanche";
+export type Network = "sepolia";
+
 
 export type FhevmNetwork = "devnet" | "mainnet";
 
@@ -163,9 +158,8 @@ export interface EncryptedInput {
  * FHE instance configuration
  */
 export interface FhevmConfig {
-  network: FhevmNetwork;
-  gatewayUrl: string;
-  contractAddress?: string;
+  network: Network;  // Changed from FhevmNetwork to Network (e.g., "sepolia")
+  rpcUrl: string;    // RPC URL for blockchain interaction
 }
 
 // ==================== Client Types ====================
@@ -178,7 +172,6 @@ export interface X402ClientConfig {
   fhevmNetwork: FhevmNetwork;
   privateKey: string;
   rpcUrl?: string;
-  gatewayUrl: string;
 }
 
 /**

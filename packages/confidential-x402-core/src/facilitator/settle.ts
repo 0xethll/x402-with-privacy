@@ -139,10 +139,10 @@ export async function settleConfidentialPayment(
       // Initialize FHEVM SDK
       await initFHEVM();
 
-      // Create FHEVM client
+      // Create FHEVM client with RPC provider
       const client = await createFHEVMClient({
-        network: "sepolia",
-        provider: fhevmConfig.gatewayUrl || "https://ethereum-sepolia-rpc.publicnode.com",
+        network: fhevmConfig.network,
+        provider: fhevmConfig.rpcUrl,
       });
 
       // Decrypt using wallet client for signing
