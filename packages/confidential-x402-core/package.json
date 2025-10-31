@@ -1,0 +1,22 @@
+{
+  "name": "@x402-privacy/core",
+  "version": "0.1.0",
+  "description": "Core functionality for confidential X402 protocol",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["x402", "fhe", "privacy", "payments"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@x402-privacy/types": "workspace:*",
+    "viem": "^2.21.54",
+    "@fhevmsdk/core": "0.2.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

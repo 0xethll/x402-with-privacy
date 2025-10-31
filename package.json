@@ -1,0 +1,25 @@
+{
+  "name": "x402-with-privacy",
+  "version": "1.0.0",
+  "description": "Privacy-preserving X402 payment protocol with FHE",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev:server": "pnpm --filter @x402-privacy/hono-server dev",
+    "dev:client": "pnpm --filter @x402-privacy/client dev",
+    "dev:facilitator": "pnpm --filter @x402-privacy/facilitator dev",
+    "clean": "pnpm -r exec rm -rf dist node_modules",
+    "typecheck": "pnpm -r exec tsc --noEmit"
+  },
+  "keywords": ["x402", "fhe", "privacy", "payments", "blockchain"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^9.38.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
