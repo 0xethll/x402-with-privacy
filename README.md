@@ -1,3 +1,5 @@
+## The EIP712 compatible confidential contract is written at https://github.com/0xethll/zama-starter/blob/main/contracts/contracts/cUSDX402.sol ##
+
 # X402 with Privacy
 
 Privacy-preserving payment protocol for sensitive data APIs, built on X402 and Zama's fhEVM (Fully Homomorphic Encryption).
