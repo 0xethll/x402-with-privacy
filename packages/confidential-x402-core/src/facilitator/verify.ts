@@ -112,7 +112,7 @@ export async function verifyConfidentialPayment(
 
   // Verify EIP-712 signature
   const domain = {
-    name: requirements.extra?.name || "ConfidentialUSD",
+    name: requirements.extra?.name || "Confidential USD",
     version: requirements.extra?.version || "1",
     chainId: getChainId(requirements.network),
     verifyingContract: requirements.asset as Address,
@@ -139,6 +139,18 @@ export async function verifyConfidentialPayment(
   } as const;
 
   try {
+    console.log("\n🔍 Verifying EIP-712 signature...");
+    console.log("   Domain:", JSON.stringify(domain, null, 2));
+    console.log("   Message:", JSON.stringify({
+      from: authorization.from,
+      to: authorization.to,
+      encryptedValueHandle: authorization.encryptedValueHandle,
+      validAfter: authorization.validAfter,
+      validBefore: authorization.validBefore,
+      nonce: authorization.nonce,
+    }, null, 2));
+    console.log("   Signature:", signature);
+
     const isValid = await verifyTypedData({
       address: authorization.from as Address,
       domain,
@@ -148,6 +160,8 @@ export async function verifyConfidentialPayment(
       signature: signature as Hex,
     });
 
+    console.log("   Verification result:", isValid);
+
     if (!isValid) {
       return {
         isValid: false,
@@ -156,6 +170,7 @@ export async function verifyConfidentialPayment(
       };
     }
   } catch (error) {
+    console.error("   ❌ Signature verification error:", error);
     return {
       isValid: false,
       invalidReason: "invalid_signature",

@@ -23,7 +23,7 @@ export type PaymentScheme = "exact-confidential";
 export interface Authorization {
   from: string;
   to: string;
-  encryptedValueHandle: string;  // bytes32 FHE handle
+  encryptedValueHandle: string;  // bytes32 FHE handle = externalEuint64
   inputProof: string;             // bytes ZK proof
   validAfter: string;             // Unix timestamp
   validBefore: string;            // Unix timestamp

@@ -54,7 +54,7 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
       maxTimeoutSeconds: routeConfig.config?.maxTimeoutSeconds || 300,
       asset: contractAddress,
       extra: {
-        name: "ConfidentialUSD",
+        name: "Confidential USD",
         version: "1",
       },
     };
@@ -145,6 +145,9 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
 
     // Settle payment via Facilitator service
     try {
+      console.log("\n💰 Calling Facilitator /settle endpoint...");
+      console.log(`   URL: ${facilitatorUrl}/settle`);
+
       const settleResponse = await fetch(`${facilitatorUrl}/settle`, {
         method: "POST",
         headers: {
@@ -156,11 +159,16 @@ export function confidentialPaymentMiddleware(options: MiddlewareOptions) {
         }),
       });
 
+      console.log(`   Response status: ${settleResponse.status}`);
+
       if (!settleResponse.ok) {
+        const errorText = await settleResponse.text();
+        console.error(`   ❌ Facilitator error response: ${errorText}`);
         throw new Error(`Facilitator settle failed: ${settleResponse.status}`);
       }
 
       const settlement: SettleResponse = await settleResponse.json();
+      console.log(`   Settlement result:`, settlement);
 
       if (settlement.success) {
         const responseHeader = encodePaymentPayload({

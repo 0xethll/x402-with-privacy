@@ -10,6 +10,7 @@ import {
   parseErc6492Signature,
   getContract,
   parseEventLogs,
+  hashTypedData,
 } from "viem";
 import type {
   PaymentPayload,
@@ -17,7 +18,7 @@ import type {
   SettleResponse,
   FhevmConfig,
 } from "@x402-privacy/types";
-import { getFhevmNetwork } from "../utils/network";
+import { getFhevmNetwork, getChainId } from "../utils/network";
 import { getFHEVMClient } from "../utils/fhevm";
 
 const CONFIDENTIAL_USD_ABI = [
@@ -82,6 +83,62 @@ export async function settleConfidentialPayment(
   try {
     // Parse ERC-6492 signature if needed
     const { signature: cleanSignature } = parseErc6492Signature(signature as Hex);
+
+    console.log("\n📝 Calling transferWithAuthorization...");
+    console.log("   From:", authorization.from);
+    console.log("   To:", authorization.to);
+    console.log("   EncryptedValueHandle:", authorization.encryptedValueHandle);
+    console.log("   EncryptedValueHandle length:", authorization.encryptedValueHandle.length);
+    console.log("   Original Signature:", signature);
+    console.log("   Clean Signature:", cleanSignature);
+    console.log("   Signature length:", cleanSignature.length);
+    console.log("   Nonce:", authorization.nonce);
+    console.log("   Facilitator (tx sender):", walletClient.account?.address);
+
+    // Debug: Verify signature format
+    console.log("\n🔍 Signature analysis:");
+    console.log("   r:", cleanSignature.slice(0, 66));
+    console.log("   s:", '0x' + cleanSignature.slice(66, 130));
+    console.log("   v:", '0x' + cleanSignature.slice(130, 132));
+
+    // Debug: Compute EIP-712 digest to verify it matches contract's computation
+    const domain = {
+      name: requirements.extra?.name || "Confidential USD",
+      version: requirements.extra?.version || "1",
+      chainId: getChainId(payload.network),
+      verifyingContract: requirements.asset as Address,
+    } as const;
+
+    const types = {
+      TransferWithAuthorization: [
+        { name: "from", type: "address" },
+        { name: "to", type: "address" },
+        { name: "encryptedValueHandle", type: "bytes32" },
+        { name: "validAfter", type: "uint256" },
+        { name: "validBefore", type: "uint256" },
+        { name: "nonce", type: "bytes32" },
+      ],
+    } as const;
+
+    const message = {
+      from: authorization.from as Address,
+      to: authorization.to as Address,
+      encryptedValueHandle: authorization.encryptedValueHandle as Hex,
+      validAfter: BigInt(authorization.validAfter),
+      validBefore: BigInt(authorization.validBefore),
+      nonce: authorization.nonce as Hex,
+    } as const;
+
+    const digest = hashTypedData({
+      domain,
+      types,
+      primaryType: "TransferWithAuthorization",
+      message,
+    });
+
+    console.log("\n🔍 EIP-712 Digest (computed in facilitator):");
+    console.log("   Digest:", digest);
+    console.log("   This should match what the contract computes internally");
 
     const hash = await contract.write.transferWithAuthorization([
       authorization.from as Address,

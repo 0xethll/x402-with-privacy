@@ -6,12 +6,13 @@
 
 import { config } from "dotenv";
 import axios from "axios";
-import { createWalletClient, http } from "viem";
+import { createWalletClient, createPublicClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import type { Hex } from "viem";
+import type { Hex, Address } from "viem";
 import {
   createPaymentHeader,
   ensureFHEVMInitialized,
+  ensureSufficientBalance,
   type PaymentRequirements
 } from "@x402-privacy/core";
 
@@ -31,6 +32,11 @@ async function fetchCreditScore() {
   const account = privateKeyToAccount(PRIVATE_KEY as Hex);
   const walletClient = createWalletClient({
     account,
+    transport: http(RPC_URL),
+  });
+
+  // Initialize public client
+  const publicClient = createPublicClient({
     transport: http(RPC_URL),
   });
 
@@ -56,8 +62,27 @@ async function fetchCreditScore() {
       console.log(`   Amount: ${paymentRequirements.maxAmountRequired} (${(Number(paymentRequirements.maxAmountRequired) / 1000000).toFixed(2)} ConfidentialUSD)`);
       console.log(`   Pay To: ${paymentRequirements.payTo}`);
 
-      // Step 2: Create confidential payment header
-      console.log("\n🔐 Step 3: Creating FHE encrypted payment...");
+      // Step 2: Check balance and mint if needed
+      const requiredAmount = BigInt(paymentRequirements.maxAmountRequired);
+      const hasSufficientBalance = await ensureSufficientBalance(
+        walletClient,
+        publicClient,
+        paymentRequirements.asset as Address,
+        account.address,
+        requiredAmount,
+        {
+          network: "sepolia",
+          rpcUrl: RPC_URL,
+        }
+      );
+
+      if (!hasSufficientBalance) {
+        console.error("❌ Failed to ensure sufficient balance");
+        return;
+      }
+
+      // Step 3: Create confidential payment header
+      console.log("🔐 Step 3: Creating FHE encrypted payment...");
       console.log("   🔒 Encrypting payment amount with FHE");
       console.log("   🔏 Payment amount is hidden from third parties");
       const paymentHeader = await createPaymentHeader(

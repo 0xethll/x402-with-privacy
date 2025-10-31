@@ -9,6 +9,11 @@ export * from "@x402-privacy/types";
 
 // Client exports
 export { createPaymentHeader } from "./client/createPaymentHeader";
+export {
+  getConfidentialBalance,
+  mintConfidentialTokens,
+  ensureSufficientBalance,
+} from "./client/balance";
 
 // Facilitator exports
 export { verifyConfidentialPayment } from "./facilitator/verify";
